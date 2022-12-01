@@ -1,31 +1,26 @@
 ﻿using System.Reflection;
 using Day1.Models;
 
-string executingPath = System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-string inputFileName = "input.txt";
-string inputPath = $"{executingPath}\\{inputFileName}";
+string[] inputLines = ReadInputFile();
+IList<Elf> elves = CreateElves( inputLines );
+DetermineSolutions( elves );
 
-ReadLines( inputPath, out string[] inputLines );
-CreateElves( inputLines, out IList<Elf> elves );
-elves = elves.OrderBy( x => x.CurrentlyCarriedCalories ).ToList();
-
-DetermineTopElf( elves );
-DetermineTopElves( elves, 3 );
-
-void CreateElves( string[] inputLines, out IList<Elf> elves )
+IList<Elf> CreateElves( string[] inputLines )
 {
     if ( inputLines.Length == 0 )
     {
         throw new ArgumentException( "No elves could be created." );
     }
 
-    elves = new List<Elf>();
-    int currentElfId = 1;
-    int currentItemId = 1;
-    Elf currentElf = new Elf( currentElfId );
+    IList<Elf> elves = new List<Elf>();
+
+    var currentElfId = 1;
+    var currentItemId = 1;
+    var currentElf = new Elf( currentElfId );
+    
     foreach ( string inputLine in inputLines )
     {
-        bool isParseSuccessful = Int32.TryParse( inputLine, out int itemCalories );
+        bool isParseSuccessful = int.TryParse( inputLine, out int itemCalories );
 
         if ( !isParseSuccessful )
         {
@@ -38,30 +33,53 @@ void CreateElves( string[] inputLines, out IList<Elf> elves )
     }
     
     elves.Add(currentElf);
+
+    return elves;
 }
 
 void ReadLines( string s, out string[] inputLines )
 {
     try
     {
-        inputLines = System.IO.File.ReadAllLines( s );
+        inputLines = File.ReadAllLines( s );
     }
-    catch ( Exception e )
+    catch (Exception)
     {
         throw new ArgumentNullException( "No lines could be read from input file." );
     }
 }
 
-void DetermineTopElves( IList<Elf> list, int topCount )
+string[] ReadInputFile()
 {
-    IEnumerable<Elf> topElves = list.TakeLast( 3 );
-    int totalCaloriesAmongTop = topElves.Sum( x => x.CurrentlyCarriedCalories );
+    string? executingPath = Path.GetDirectoryName( Assembly.GetEntryAssembly()?.Location );
+    string inputFileName = "input.txt";
+    string inputPath = $"{executingPath}\\{inputFileName}";
 
-    Console.WriteLine( $"The top {topCount} elves are carrying a total of {totalCaloriesAmongTop} calories." );
+    ReadLines( inputPath, out string[] strings );
+    
+    return strings;
 }
 
-void DetermineTopElf( IList<Elf> elves )
+void DetermineSolutions( IList<Elf> elves )
 {
-    Elf elfCarryingMaxCalories = elves.Last();
-    Console.WriteLine( $"The elf with ID {elfCarryingMaxCalories.Id} is carrying the most calories, {elfCarryingMaxCalories.CurrentlyCarriedCalories}." );
+    void DetermineTopElf( IList<Elf> elves )
+    {
+        Elf elfCarryingMaxCalories = elves.Last();
+        Console.WriteLine( $"The elf with ID {elfCarryingMaxCalories.Id} is carrying the most calories, {elfCarryingMaxCalories.CurrentlyCarriedCalories}." );
+    }
+
+    void DetermineTopElves( IList<Elf> list, int topCount )
+    {
+        IEnumerable<Elf> topElves = list.TakeLast( 3 );
+        int totalCaloriesAmongTop = topElves.Sum( x => x.CurrentlyCarriedCalories );
+
+        Console.WriteLine( $"The top {topCount} elves are carrying a total of {totalCaloriesAmongTop} calories." );
+    }
+
+    {
+        elves = elves.OrderBy( x => x.CurrentlyCarriedCalories ).ToList();
+
+        DetermineTopElf( elves );
+        DetermineTopElves( elves, 3 );
+    }
 }

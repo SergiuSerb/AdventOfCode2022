@@ -2,21 +2,21 @@ namespace Day1.Models
 {
     public class Elf
     {
-        public int Id { get; set; }
+        public int Id { get; }
 
-        public Backpack Backpack { get; set; }
+        private readonly Backpack _backpack;
 
-        public int CurrentlyCarriedCalories => Backpack.TotalCalories;
+        public int CurrentlyCarriedCalories => _backpack.TotalCalories;
 
         public Elf( int id )
         {
             Id = id;
-            Backpack = new Backpack();
+            _backpack = new Backpack();
         }
 
         public void PickItem( Item item )
         {
-            Backpack.AddItem(item);
+            _backpack.AddItem(item);
         }
         
     }

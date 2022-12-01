@@ -2,18 +2,18 @@ namespace Day1.Models
 {
     public class Backpack
     {
-        private IList<Item> items;
+        private readonly IList<Item> _items;
 
         public Backpack()
         {
-            items = new List<Item>();
+            _items = new List<Item>();
         }
 
-        public int TotalCalories => items.Sum( x => x.Calories );
+        public int TotalCalories => _items.Sum( x => x.Calories );
 
         public void AddItem( Item itemToAdd )
         {
-            items.Add(itemToAdd);
+            _items.Add(itemToAdd);
         }
     }
 }
