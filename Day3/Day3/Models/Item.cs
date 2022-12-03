@@ -2,7 +2,7 @@
 {
     public class Item
     {
-        public int Id { get; }
+        private int Id { get; }
 
         public char Representation { get; }
 

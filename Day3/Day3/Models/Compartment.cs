@@ -2,16 +2,21 @@
 {
     public class Compartment
     {
-        public List<Item> Items { get; }
+        private readonly List<Item> items;
 
         public Compartment()
         {
-            Items = new List<Item>();
+            items = new List<Item>();
         }
 
         public void AddItem(Item item)
         {
-            Items.Add(item);
+            items.Add(item);
+        }
+
+        public List<Item> GetContainingItems()
+        {
+            return items;
         }
         
     }

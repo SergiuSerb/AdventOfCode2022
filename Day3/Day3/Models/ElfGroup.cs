@@ -3,30 +3,28 @@
     public class ElfGroup
     {
         private const int Capacity = 3;
-
-        public int Id { get; }
-
-        public IList<Elf> Elves { get; }
+        private int id;
+        private readonly IList<Elf> elves;
 
         public ElfGroup(int id)
         {
-            Id = id;
-            Elves = new List<Elf>();
+            this.id = id;
+            elves = new List<Elf>();
         }
 
         public void AddToGroup(Elf elf)
         {
-            Elves.Add(elf);
+            elves.Add(elf);
         }
 
         public Item GetBadgeItem()
         {
-            Elf firstElf = Elves[0];
+            Elf firstElf = elves[0];
 
             foreach (Item carriedItem in firstElf.GetCarriedItems())
             {
-                bool doesSecondElfHaveItem = Elves[1].GetCarriedItems().Any(x => x.Representation == carriedItem.Representation);
-                bool doesThirdElfHaveItem = Elves[2].GetCarriedItems().Any(x => x.Representation == carriedItem.Representation);
+                bool doesSecondElfHaveItem = elves[1].GetCarriedItems().Any(x => x.Representation == carriedItem.Representation);
+                bool doesThirdElfHaveItem = elves[2].GetCarriedItems().Any(x => x.Representation == carriedItem.Representation);
 
                 if (doesSecondElfHaveItem && doesThirdElfHaveItem)
                 {
@@ -35,12 +33,12 @@
                 
             }
 
-            return null;
+            throw new ApplicationException("No badge item could be found in group.");
         }
 
         public bool IsFull()
         {
-            return Elves.Count >= Capacity;
+            return elves.Count >= Capacity;
         }
 
     }

@@ -6,12 +6,10 @@ using Day3.Models;
 string[] inputLines = ReadInputFile();
 
 IList<Elf> elves = CreateElves(inputLines);
-DeterminePrioritySumOfMisplacedItems(elves);
+DeterminePrioritySumOfMisplacedItems(elves); // solution 1
 
 IList<ElfGroup> elfGroups = CreateElfGroups(elves);
-DeterminePrioritySumOfGroupBadgeItems(elfGroups);
-
-
+DeterminePrioritySumOfGroupBadgeItems(elfGroups); // solution 2
 
 IList<Elf> CreateElves(string[] inputLines)
 {

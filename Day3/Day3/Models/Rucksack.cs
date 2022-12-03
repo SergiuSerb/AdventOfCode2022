@@ -2,37 +2,37 @@
 {
     public class Rucksack
     {
-        private Compartment FirstCompartment { get; }
-
-        private Compartment SecondCompartment { get; }
+        private readonly Compartment firstCompartment;
+        private readonly Compartment secondCompartment;
 
         public Rucksack()
         {
-            FirstCompartment = new Compartment();
-            SecondCompartment = new Compartment();
+            firstCompartment = new Compartment();
+            secondCompartment = new Compartment();
         }
 
         public void AddToFirstCompartment(Item item)
         {
-            FirstCompartment.AddItem( item );
+            firstCompartment.AddItem( item );
         }
 
         public void AddToSecondCompartment(Item item)
         {
-            SecondCompartment.AddItem( item );
+            secondCompartment.AddItem( item );
         }
 
         public Item FindCommonItem()
         {
-            return FirstCompartment.Items.First(x => SecondCompartment.Items.Any(y => y.Representation == x.Representation));
+            return firstCompartment.GetContainingItems()
+                .First(x => secondCompartment.GetContainingItems().Any(y => y.Representation == x.Representation));
         }
 
         public IList<Item> GetCarriedItems()
         {
             IList<Item> carriedItems = new List<Item>();
             
-            FirstCompartment.Items.ForEach(carriedItems.Add);
-            SecondCompartment.Items.ForEach(carriedItems.Add);
+            firstCompartment.GetContainingItems().ForEach(carriedItems.Add);
+            secondCompartment.GetContainingItems().ForEach(carriedItems.Add);
 
             return carriedItems;
         }

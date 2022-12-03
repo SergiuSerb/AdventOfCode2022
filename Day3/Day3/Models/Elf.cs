@@ -2,34 +2,33 @@
 {
     public class Elf
     {
-        public int Id { get; set; }
-        
-        public Rucksack Rucksack { get; set; }
+        private int id;
+        private readonly Rucksack rucksack;
 
         public Elf(int id)
         {
-            Id = id;
-            Rucksack = new Rucksack();
+            this.id = id;
+            rucksack = new Rucksack();
         }
 
         public void AddItemToRucksackFirstCompartment(Item item)
         {
-            Rucksack.AddToFirstCompartment(item);
+            rucksack.AddToFirstCompartment(item);
         }
 
         public void AddItemToRucksackSecondCompartment(Item item)
         {
-            Rucksack.AddToSecondCompartment(item);
+            rucksack.AddToSecondCompartment(item);
         }
 
         public Item GetMisplacedItem()
         {
-            return Rucksack.FindCommonItem();
+            return rucksack.FindCommonItem();
         }
 
         public IList<Item> GetCarriedItems()
         {
-            return Rucksack.GetCarriedItems();
+            return rucksack.GetCarriedItems();
         }
     }
 }
