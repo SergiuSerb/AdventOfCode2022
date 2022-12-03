@@ -2,8 +2,9 @@
 {
     public class GameOutcome
     {
-        public char Id { get; }
-        public string Name { get; }
+        private char Id { get; }
+
+        private string Name { get; }
 
         private GameOutcome(char id, string name)
         {
@@ -22,7 +23,7 @@
 
         public static GameOutcome GetById(char id)
         {
-            GameOutcome outcome = All.FirstOrDefault(x => x.Id == id);
+            GameOutcome? outcome = All.FirstOrDefault(x => x.Id == id);
 
             if (outcome == null)
             {

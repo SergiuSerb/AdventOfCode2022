@@ -12,7 +12,7 @@
 
         public int PointToFriendly { get; }
 
-        public GameRule(EnemyMove enemyMove, FriendlyMove friendlyMove, GameOutcome outcomeForFriendly, int pointsToEnemy, int pointToFriendly)
+        private GameRule(EnemyMove enemyMove, FriendlyMove friendlyMove, GameOutcome outcomeForFriendly, int pointsToEnemy, int pointToFriendly)
         {
             EnemyMove = enemyMove;
             FriendlyMove = friendlyMove;
@@ -21,7 +21,7 @@
             PointToFriendly = pointToFriendly;
         }
 
-        public static IList<GameRule> AllRules = new List<GameRule>()
+        public static readonly IList<GameRule> AllRules = new List<GameRule>()
         {
             new GameRule(EnemyMove.Rock, FriendlyMove.Rock, GameOutcome.Draw , DrawPoints + 1, DrawPoints + 1),
             new GameRule(EnemyMove.Rock, FriendlyMove.Paper, GameOutcome.Victory , DefeatPoints + 1, VictoryPoints + 2),

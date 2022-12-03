@@ -2,14 +2,14 @@
 {
     public class EnemyMove : Move
     {
-        private EnemyMove(char id, string name, int score) : base(id, name, score)
+        private EnemyMove(char id, string name) : base(id, name)
         {
             
         }
 
-        public static EnemyMove Rock = new EnemyMove('A', nameof(Rock), 1);
-        public static EnemyMove Paper = new EnemyMove('B', nameof(Paper), 2);
-        public static EnemyMove Scissors = new EnemyMove('C', nameof(Scissors), 3);
+        public static EnemyMove Rock = new EnemyMove('A', nameof(Rock));
+        public static EnemyMove Paper = new EnemyMove('B', nameof(Paper));
+        public static EnemyMove Scissors = new EnemyMove('C', nameof(Scissors));
 
         private static readonly IList<EnemyMove> All = new List<EnemyMove>()
         {
@@ -23,7 +23,7 @@
 
         public static EnemyMove GetById(char id)
         {
-            EnemyMove move = All.FirstOrDefault(move => move.Id == id);
+            EnemyMove? move = All.FirstOrDefault(move => move.Id == id);
 
             if (move == null)
             {

@@ -2,7 +2,7 @@
 {
     public class Player
     {
-        public string Name { get; }
+        private string Name { get; }
 
         public int Score { get; set; }
 

@@ -1,6 +1,6 @@
 ﻿namespace Day2.Models
 {
-    public class GameCalculator
+    public static class GameCalculator
     {
         public static Player DetermineFriendlyPlayerPointsByFriendlyMove(IList<Round> strategies)
         {

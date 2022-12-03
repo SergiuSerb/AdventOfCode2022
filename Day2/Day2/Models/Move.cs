@@ -6,13 +6,10 @@
 
         protected string Name { get; }
 
-        public int Score { get; }
-
-        protected Move(char id, string name, int score)
+        protected Move(char id, string name)
         {
             Id = id;
             Name = name;
-            Score = score;
         }
 
         public override string ToString()
