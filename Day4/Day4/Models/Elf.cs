@@ -2,13 +2,12 @@ namespace Day4.Models
 {
     public class Elf
     {
-        public int Id { get; }
-
+        private readonly int _id;
         private readonly IList<Section> _sections;
 
         public Elf( int id )
         {
-            Id = id;
+            _id = id;
             _sections = new List<Section>();
         }
 

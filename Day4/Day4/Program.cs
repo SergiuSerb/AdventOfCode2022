@@ -46,9 +46,9 @@ Elf CreateElf( int elfId, string inputLine )
     int startSection = int.Parse( separatedElfLine[0] );
     int endSection = int.Parse( separatedElfLine[1] );
 
-    for ( int i = startSection; i <= endSection; i++ )
+    for ( int sectionId = startSection; sectionId <= endSection; sectionId++ )
     {
-        var section = new Section( i );
+        var section = new Section( sectionId );
         elf.AddSection(section);
     }
 
