@@ -6,7 +6,7 @@ namespace Day5.Models
     {
         public int Id { get; }
 
-        public Stack<Crate> Crates { get; }
+        private Stack<Crate> Crates { get; }
 
         public CrateStack(int id)
         {

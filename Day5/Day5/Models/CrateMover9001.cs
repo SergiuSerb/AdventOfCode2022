@@ -9,7 +9,7 @@ namespace Day5.Models
         {
         }
 
-        protected override void Move(int sourceStackId, int destinationStackId, int numberOfCratesToMove)
+        private void Move(int sourceStackId, int destinationStackId, int numberOfCratesToMove)
         {
             CrateStack source = Stacks.First(x => x.Id == sourceStackId);
             CrateStack destination  = Stacks.First(x => x.Id == destinationStackId);

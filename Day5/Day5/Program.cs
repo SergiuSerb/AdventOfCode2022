@@ -98,14 +98,14 @@ namespace Day5
             cleanedUpInputs.Remove(stackIds);
             cleanedUpInputs.Reverse();
 
-            for (int i = 0; i < stackIds.Length; i++)
+            for (int stackIndex = 0; stackIndex < stackIds.Length; stackIndex++)
             {
-                int stackId = int.Parse(stackIds[i].ToString());
+                int stackId = int.Parse(stackIds[stackIndex].ToString());
                 CrateStack stack = new CrateStack(stackId);
 
                 foreach (string cleanedUpInput in cleanedUpInputs)
                 {
-                    char crateId = cleanedUpInput[i];
+                    char crateId = cleanedUpInput[stackIndex];
 
                     if (!string.IsNullOrWhiteSpace(crateId.ToString()))
                     {
@@ -113,7 +113,6 @@ namespace Day5
                         stack.Add(crate);
                     }
                 }
-
                 stacks.Add(stack);
             }
             

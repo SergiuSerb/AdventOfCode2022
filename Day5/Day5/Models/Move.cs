@@ -2,7 +2,7 @@
 {
     public class Move
     {
-        public int Id { get; }
+        private int Id { get; }
 
         public int SourceStackId { get; }
 
