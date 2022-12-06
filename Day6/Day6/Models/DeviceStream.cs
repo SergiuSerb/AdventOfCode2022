@@ -6,65 +6,63 @@ namespace Day6.Models
 {
     public class DeviceStream
     {
-        public IList<char> Stream { get; }
+        private readonly IList<char> stream;
+        private Queue<char> startPacketMarker;
+        private Queue<char> startMessageMarker;
 
-        public Queue<char> StartPacketMarker { get; set; }
+        public int StartPacketMarkerIndex { get; private set; }
         
-        public Queue<char> StartMessageMarker { get; set; }
-
-        public int StartPacketMarkerIndex { get; set; }
-        
-        public int StartMessageMarkerIndex { get; set; }
+        public int StartMessageMarkerIndex { get; private set; }
 
         public DeviceStream(IList<char> stream)
         {
-            Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            this.stream = stream ?? throw new ArgumentNullException(nameof(stream));
             DetermineStartPacketMarker();
             DetermineStartMessageMarker();
         }
 
         private void DetermineStartPacketMarker()
         {
-            StartPacketMarker = new Queue<char>();
+            startPacketMarker = new Queue<char>();
 
             int currentIndex = 0;
-            foreach (char character in Stream)
+            foreach (char character in stream)
             {
-                if (StartPacketMarker.Distinct().Count() == 4)
+                if (startPacketMarker.Distinct().Count() == 4)
                 {
                     StartPacketMarkerIndex = currentIndex;
                     break;
                 }
 
-                if (StartPacketMarker.Count == 4)
+                if (startPacketMarker.Count == 4)
                 {
-                    StartPacketMarker.Dequeue();
+                    startPacketMarker.Dequeue();
                 }
 
-                StartPacketMarker.Enqueue(character);
+                startPacketMarker.Enqueue(character);
                 currentIndex++;
             }
         }
         
         private void DetermineStartMessageMarker()
         {
-            StartMessageMarker = new Queue<char>();
+            startMessageMarker = new Queue<char>();
 
             int currentIndex = 0;
-            foreach (char character in Stream)
+            foreach (char character in stream)
             {
-                if (StartMessageMarker.Distinct().Count() == 14)
+                if (startMessageMarker.Distinct().Count() == 14)
                 {
                     StartMessageMarkerIndex = currentIndex;
                     break;
                 }
 
-                if (StartMessageMarker.Count == 14)
+                if (startMessageMarker.Count == 14)
                 {
-                    StartMessageMarker.Dequeue();
+                    startMessageMarker.Dequeue();
                 }
 
-                StartMessageMarker.Enqueue(character);
+                startMessageMarker.Enqueue(character);
                 currentIndex++;
             }
         }

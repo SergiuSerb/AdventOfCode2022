@@ -12,6 +12,7 @@ namespace Day6
         {
             string[] inputLines = ReadInputFile();
             DeviceStream stream = new DeviceStream(inputLines[0].ToList());
+            
             DetermineStartOfPackets(stream);
             DetermineStartOfMessage(stream);
         }
