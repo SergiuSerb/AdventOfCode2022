@@ -4,9 +4,7 @@ namespace Day7.Models
 {
     public class Document : IFileSystemEntry
     {
-        private int _size;
-
-        public int Size => _size;
+        public int Size { get; }
 
         public string Name { get; }
 
@@ -14,7 +12,7 @@ namespace Day7.Models
 
         public Document(int size, string name)
         {
-            _size = size;
+            Size = size;
             Name = name;
         }
     }

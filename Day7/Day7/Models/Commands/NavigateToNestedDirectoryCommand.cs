@@ -15,6 +15,5 @@ namespace Day7.Models.Commands
         {
             fileSystemExplorer.NavigateToDirectoryByName(Argument);
         }
-        
     }
 }

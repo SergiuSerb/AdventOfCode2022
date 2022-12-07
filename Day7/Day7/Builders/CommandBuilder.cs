@@ -1,14 +1,13 @@
-﻿using System;
-using Day7.Interfaces;
+﻿using Day7.Interfaces;
 using Day7.Models.Commands;
 
 namespace Day7.Builders
 {
     public static class CommandBuilder
     {
-        private const string moveCurrentDirectoryCommandKeyword = "cd";
-        private const string listCurrentDirectoryEntriesCommandKeyword = "ls";
-        private const string createDirectoryCommandKeyword = "dir";
+        private const string MoveCurrentDirectoryCommandKeyword = "cd";
+        private const string ListCurrentDirectoryEntriesCommandKeyword = "ls";
+        private const string CreateDirectoryCommandKeyword = "dir";
 
         public static ICommand Build(string inputLine)
         {
@@ -23,17 +22,17 @@ namespace Day7.Builders
                 argument = commandParts[1];
             }
 
-            if (string.Equals(keyword, moveCurrentDirectoryCommandKeyword))
+            if (string.Equals(keyword, MoveCurrentDirectoryCommandKeyword))
             {
                 return new NavigateToNestedDirectoryCommand(argument);
             }
 
-            if (string.Equals(keyword, listCurrentDirectoryEntriesCommandKeyword))
+            if (string.Equals(keyword, ListCurrentDirectoryEntriesCommandKeyword))
             {
                 return new ListDirectoryEntriesCommand();
             }
 
-            if (string.Equals(keyword, createDirectoryCommandKeyword))
+            if (string.Equals(keyword, CreateDirectoryCommandKeyword))
             {
                 return new CreateDirectoryEntryCommand(argument);
             }

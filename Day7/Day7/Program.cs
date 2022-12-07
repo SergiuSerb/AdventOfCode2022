@@ -6,13 +6,14 @@ using System.Reflection;
 using Day7.Builders;
 using Day7.Interfaces;
 using Day7.Models;
-using Day7.Models.Commands;
 using Directory = Day7.Models.Directory;
 
 namespace Day7
 {
     class Program
     {
+        private const int RequiredSpaceForUpdate = 30000000;
+
         static void Main(string[] args)
         {
             string[] inputLines = ReadInputFile();
@@ -28,7 +29,7 @@ namespace Day7
             
             IList<Directory> uniqueDirectories = explorer.GetAllDirectories();
 
-            int sizeOfDirectoryToDelete = uniqueDirectories.Where(x => fileSystem.CurrentUnusedSpace + x.Size >= 30000000).Min(x => x.Size);
+            int sizeOfDirectoryToDelete = uniqueDirectories.Where(x => fileSystem.CurrentUnusedSpace + x.Size >= RequiredSpaceForUpdate).Min(x => x.Size);
             
             Console.WriteLine($"The size of the directory to delete is {sizeOfDirectoryToDelete}.");
         }

@@ -7,9 +7,9 @@ namespace Day7.Models
 {
     public class FileSystemExplorer
     {
-        public FileSystem FileSystem { get; }
+        private FileSystem FileSystem { get; }
 
-        public Directory CurrentDirectory { get; set; }
+        public Directory CurrentDirectory { get; private set; }
 
         public FileSystemExplorer(FileSystem fileSystem)
         {
@@ -19,16 +19,7 @@ namespace Day7.Models
 
         public void NavigateToDirectoryByName(string argument)
         {
-            IFileSystemEntry entryToMoveTo;
-            if (string.Equals(argument, ".."))
-            {
-                entryToMoveTo = CurrentDirectory.Parent;
-
-            }
-            else
-            {
-                entryToMoveTo = CurrentDirectory.GetEntryByName(argument);
-            }
+            IFileSystemEntry entryToMoveTo = string.Equals(argument, "..") ? CurrentDirectory.Parent : CurrentDirectory.GetEntryByName(argument);
             
             if (entryToMoveTo == null)
             {
