@@ -93,7 +93,7 @@ namespace Day8
                 return true;
             }
 
-            return GetMaxHeightAtWest(false) < Height;
+            return _westTree.GetMaxHeightAtWest() < Height;
         }        
         
         private bool IsTreeVisibleFromEast()
@@ -103,7 +103,7 @@ namespace Day8
                 return true;
             }
 
-            return GetMaxHeightAtEast(false) < Height;
+            return _eastTree.GetMaxHeightAtEast() < Height;
         }        
         
         private bool IsTreeVisibleFromNorth()
@@ -113,7 +113,7 @@ namespace Day8
                 return true;
             }
 
-            return GetMaxHeightAtNorth(false) < Height;
+            return _northTree.GetMaxHeightAtNorth() < Height;
         }        
         
         private bool IsTreeVisibleFromSouth()
@@ -123,35 +123,35 @@ namespace Day8
                 return true;
             }
 
-            return GetMaxHeightAtSouth(false) < Height;
+            return _southTree.GetMaxHeightAtSouth() < Height;
         }
 
-        private int GetMaxHeightAtWest(bool strict)
+        private int GetMaxHeightAtWest()
         {
-            int maxHeight = _westTree?.GetMaxHeightAtWest(true) ?? 0;
+            int maxHeight = _westTree?.GetMaxHeightAtWest() ?? 0;
 
-            return strict ? Math.Max(maxHeight, Height) : maxHeight;
-        }
-        
-        private int GetMaxHeightAtEast(bool strict)
-        {
-            int maxHeight = _eastTree?.GetMaxHeightAtEast(true) ?? 0;
-
-            return strict ? Math.Max(maxHeight, Height) : maxHeight;
+            return Math.Max(maxHeight, Height);
         }
         
-        private int GetMaxHeightAtNorth(bool strict)
+        private int GetMaxHeightAtEast()
         {
-            int maxHeight = _northTree?.GetMaxHeightAtNorth(true) ?? 0;
+            int maxHeight = _eastTree?.GetMaxHeightAtEast() ?? 0;
 
-            return strict ? Math.Max(maxHeight, Height) : maxHeight;
+            return Math.Max(maxHeight, Height);
         }
         
-        private int GetMaxHeightAtSouth(bool strict)
+        private int GetMaxHeightAtNorth()
         {
-            int maxHeight = _southTree?.GetMaxHeightAtSouth(true) ?? 0;
+            int maxHeight = _northTree?.GetMaxHeightAtNorth() ?? 0;
 
-            return strict ? Math.Max(maxHeight, Height) : maxHeight;
+            return Math.Max(maxHeight, Height);
+        }
+        
+        private int GetMaxHeightAtSouth()
+        {
+            int maxHeight = _southTree?.GetMaxHeightAtSouth() ?? 0;
+
+            return Math.Max(maxHeight, Height);
         }
     }
 }

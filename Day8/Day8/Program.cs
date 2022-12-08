@@ -10,9 +10,9 @@ namespace Day8
         {
             string[] inputLines = ReadInputFile();
             Forest forest = CreateForest(inputLines);
+            
             DetermineNumberOfVisibleTrees(forest);
             DetermineMaxScenicScore(forest);
-            forest.Print();
         }
 
         private static void DetermineMaxScenicScore(Forest forest)
