@@ -6,11 +6,11 @@ namespace Day9.Models
 {
     public class RopePoint
     {
-        public int Id { get; set; }
+        public int Id { get; }
         
         public Point CurrentPosition { get; private set; }
-        
-        public IList<PositionHistoryEntry> PositionHistory { get; }
+
+        private IList<PositionHistoryEntry> PositionHistory { get; }
 
         public RopePoint PreviousRopePoint { get; set; }
         
@@ -141,21 +141,6 @@ namespace Day9.Models
             MoveTo(moveIndex, newPoint);
         }
 
-        private int DistanceToNextRopePoint()
-        {
-            var distanceX = CurrentPosition.X > NextRopePoint.CurrentPosition.X
-                ? CurrentPosition.X - NextRopePoint.CurrentPosition.X
-                : NextRopePoint.CurrentPosition.X - CurrentPosition.X;
-            
-            var distanceY = CurrentPosition.Y > NextRopePoint.CurrentPosition.Y
-                ? CurrentPosition.Y - NextRopePoint.CurrentPosition.Y
-                : NextRopePoint.CurrentPosition.Y - CurrentPosition.Y;
-            
-            //Console.WriteLine($"({distanceX},{distanceY})");
-
-            return Math.Max(distanceX, distanceY);
-        }
-
         public IEnumerable<Point> GetUniquePositions()
         {
             List<PositionHistoryEntry> positionsToSearch = new List<PositionHistoryEntry>(PositionHistory)
@@ -165,58 +150,5 @@ namespace Day9.Models
 
             return positionsToSearch.GroupBy(x => x.Position.Id).Select(x => x.First().Position);
         }
-
-        public void Print()
-        {
-            List<PositionHistoryEntry> positionsToPrint = new List<PositionHistoryEntry>(PositionHistory)
-            {
-                new PositionHistoryEntry(0, CurrentPosition)
-            };
-
-            int maxX = positionsToPrint.Max(x => x.Position.X);
-            int minX = positionsToPrint.Min(x => x.Position.X);
-            int maxY = positionsToPrint.Max(x => x.Position.Y);
-            int minY = positionsToPrint.Min(x => x.Position.Y);
-
-            int offsetX = 0;
-            int offsetY = 0;
-
-            if (minX < 0 && maxX > 0)
-            {
-                offsetX = Math.Abs(minX);
-                maxX = maxX + offsetX;
-            }
-            
-            if (minY < 0 && maxY > 0)
-            {
-                offsetY = Math.Abs(minY);
-                maxY = maxY + offsetY;
-            }
-
-            char[,] representation = new char[maxX + 1, maxY + 1];
-
-            for (int i = 0; i < representation.GetLength(0); i++)
-            {
-                for (int j = 0; j < representation.GetLength(1); j++)
-                {
-                    representation[i, j] = '.';
-                }
-            }
-
-            foreach (PositionHistoryEntry positionHistoryEntry in positionsToPrint)
-            {
-                representation[positionHistoryEntry.Position.X + offsetX, positionHistoryEntry.Position.Y + offsetY] = '#';
-            }
-            
-            for (int i = 0; i < representation.GetLength(0); i++)
-            {
-                for (int j = 0; j < representation.GetLength(1); j++)
-                {
-                    Console.Write(representation[i, j]);
-                }
-                Console.WriteLine();
-            }
-        }
-        
     }
 }

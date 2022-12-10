@@ -6,14 +6,14 @@ using Day9.Models;
 
 namespace Day9
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string[] inputLines = ReadInputFile();
             
-            // Rope rope = PerformMoves2Rope(inputLines);
-            // DetermineUniqueTailPositions(rope);
+            Rope rope = PerformMoves2Rope(inputLines);
+            DetermineUniqueTailPositions(rope);
             
             Rope rope2 = PerformMoves10Rope(inputLines);
             DetermineUniqueTailPositions(rope2);
