@@ -18,7 +18,6 @@ namespace Day10.Models.Commands
 
         public override void Cycle(Registry registry)
         {
-            
             CurrentCycles++;
 
             if ( IsCompleted )

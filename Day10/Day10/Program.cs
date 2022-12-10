@@ -14,6 +14,7 @@ namespace Day10
             string[] inputLines = ReadInputFile();
             CommandBatch batch = CreateBatch( inputLines );
             CentralProcessingUnit cpu = RunBatch( batch );
+            
             DetermineRegistrySum( cpu );
             PrintCanvasToConsole( cpu );
         }
