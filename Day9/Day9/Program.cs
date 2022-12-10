@@ -67,11 +67,7 @@ namespace Day9
                             rope.MoveRight(moveIndex++);
                             break;
                     }
-                    Console.WriteLine();
-                    rope.Print();
-                    
                 }
-                
             }
         }
 

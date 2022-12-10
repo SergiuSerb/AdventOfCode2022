@@ -25,57 +25,62 @@ namespace Day9.Models
 
         private void MoveTo(int moveIndex, Point point)
         {
-            Console.WriteLine($"Start performing move {moveIndex} by {Id}.");
             PositionHistory.Add(new PositionHistoryEntry(moveIndex, CurrentPosition));
             CurrentPosition = point;
-            
-            Console.WriteLine($"Requesting refresh rope point id {Id} for {NextRopePoint.Id} for moveIndex {moveIndex}.");
-            NextRopePoint.RefreshPosition(moveIndex);
-            Console.WriteLine($"Stop performing move {moveIndex} by {Id}.");
+
+            NextRopePoint?.RecalculatePosition(moveIndex);
         }
 
-        private void RefreshPosition(int moveIndex)
+        private void RecalculatePosition(int moveIndex)
         {
             if ( ShouldMove())
             {
                 if (CurrentPosition.X > PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y > PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveDownLeft(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X == PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y > PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveLeft(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X < PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y > PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveUpLeft(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X < PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y == PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveUp(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X < PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y < PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveUpRight(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X == PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y < PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveRight(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X > PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y < PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveDownRight(moveIndex);
+                    return;
                 }                  
                 
                 if (CurrentPosition.X > PreviousRopePoint.CurrentPosition.X && CurrentPosition.Y == PreviousRopePoint.CurrentPosition.Y)
                 {
                     MoveDown(moveIndex);
+                    return;
                 }
             }
         }
