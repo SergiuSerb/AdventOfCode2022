@@ -10,7 +10,7 @@ using Day11.Models.Tests;
 
 namespace Day11
 {
-    static class Program
+    internal static class Program
     {
         private static void Main( string[] args )
         {
@@ -21,6 +21,7 @@ namespace Day11
             RunSimulation( monkeys, 20 );
             DetermineMonkeyBusiness( monkeys, 20 );
 
+            //this is ugly but I am tired.
             inputLines = ReadInputFile().ToList();
             monkeys = CreateMonkeys(new List<string>(inputLines));
             BuildMonkeyRelationships( monkeys, inputLines );
@@ -34,7 +35,7 @@ namespace Day11
             foreach ( Monkey monkey in monkeys )
             {
                 monkey.BeforeTestOperation = null;
-                monkey.SelfManageWorryLevels = true;
+                monkey.selfManageWorryLevels = true;
             }
         }
 

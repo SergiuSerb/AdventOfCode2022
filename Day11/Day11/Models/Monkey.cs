@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Day11.Models.Operations;
 using Day11.Models.Tests;
@@ -9,7 +8,7 @@ namespace Day11.Models
     {
         public int Id { get; }
 
-        public IList<Item> Items { get; }
+        private IList<Item> Items { get; }
 
         private OperationBase DuringInspectionOperation { get; }
 
@@ -23,7 +22,7 @@ namespace Day11.Models
         
         public int InspectionCount { get; private set; }
 
-        public bool SelfManageWorryLevels;
+        public bool selfManageWorryLevels;
 
         public Monkey( int id, OperationBase duringInspectionOperation, OperationBase beforeTestOperation, Test test )
         {
@@ -33,7 +32,7 @@ namespace Day11.Models
             Test = test;
             Items = new List<Item>();
             InspectionCount = 0;
-            SelfManageWorryLevels = false;
+            selfManageWorryLevels = false;
         }
 
         public void ReceiveItem( Item item )
@@ -55,7 +54,7 @@ namespace Day11.Models
             {
                 InspectItem( item );
                 
-                if ( SelfManageWorryLevels )
+                if ( selfManageWorryLevels )
                 {
                     item.Importance %= lowestCommonMultiple;
                 }

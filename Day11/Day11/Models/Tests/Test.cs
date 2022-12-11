@@ -1,5 +1,3 @@
-using System.Numerics;
-
 namespace Day11.Models.Tests
 {
     public class Test
