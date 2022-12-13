@@ -14,6 +14,7 @@ namespace Day12
         {
             List<string> inputLines = ReadInputFile().ToList();
             Pathfinder pathfinder = CreatePathFinder( inputLines );
+            pathfinder.FindPath();
         }
 
         private static Pathfinder CreatePathFinder( List<string> inputLines )
@@ -21,6 +22,7 @@ namespace Day12
             IList<IList<Tile>> tiles = new List<IList<Tile>>();
             int currentTileId = 0;
             MapSettings.width = inputLines.First().Length;
+            MapSettings.height = inputLines.Count;
             
             foreach ( string inputLine in inputLines )
             {
