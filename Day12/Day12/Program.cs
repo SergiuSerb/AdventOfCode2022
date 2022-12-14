@@ -29,13 +29,13 @@ namespace Day12
             
             foreach (Tile tile in possibleStartingTiles)
             {
-                var path = pathfinder.FindPath(tile, target);
+                IList<Tile> path = pathfinder.FindPath(tile, target);
 
                 shortestPath = path.Count > 1 ? Math.Min(shortestPath, path.Count) : shortestPath ;
             }
             
             Console.WriteLine();
-            Console.WriteLine($"The shortest path to the destination is {shortestPath}.");
+            Console.WriteLine($"The shortest path overall to the destination is {shortestPath}.");
         }
 
         private static void DetermineShortestPathLengthFromGivenStartPoint(Pathfinder pathfinder)

@@ -2,7 +2,7 @@ namespace Day12.Models
 {
     internal class Tile
     {
-        public int Id { get; }
+        private int Id { get; }
 
         public char Height { get; }
         

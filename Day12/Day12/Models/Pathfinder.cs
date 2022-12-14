@@ -8,11 +8,7 @@ namespace Day12.Models
     {
         public readonly IList<IList<Tile>> Tiles;
 
-        private Tile _source;
-
-        private Tile _target;
-        
-        private IList<Tile> _solution;
+        private IList<Tile> _lastSolution;
 
         public Pathfinder( IList<IList<Tile>> tiles )
         {
@@ -21,17 +17,14 @@ namespace Day12.Models
 
         public IList<Tile> FindPath(Tile source, Tile target)
         {
-            _source = source;
-            _target = target;
-            
-            Tile currentTile = _source;
+            Tile currentTile = source;
             List<Tile> visitedTiles = new List<Tile>();
             List<Tile> tilesToVisit = new List<Tile>();
             
-            while ( currentTile != _target && currentTile != null )
+            while ( currentTile != target && currentTile != null )
             {
                 visitedTiles.Add(currentTile);
-                var possibleTiles = new List<Tile>();
+                List<Tile> possibleTiles = new List<Tile>();
                 
                 if (currentTile.CoordinatesRow + 1 < MapSettings.height)
                 {
@@ -53,15 +46,15 @@ namespace Day12.Models
                     possibleTiles.Add(Tiles[currentTile.CoordinatesRow][currentTile.CoordinatesColumn - 1]);
                 }
 
-                var filteredTiles =
+                List<Tile> filteredTiles =
                     possibleTiles.Where(x => x.Height <= currentTile.Height + 1)
                         .Where(x => !visitedTiles.Contains(x))
-                        .Where(x => (tilesToVisit.Contains(x) && x.Fitness > currentTile.CostFromSource + GetDistanceBetweenTiles(x, _target)) || !tilesToVisit.Contains(x));
+                        .Where(x => (tilesToVisit.Contains(x) && x.Fitness > currentTile.CostFromSource + GetDistanceBetweenTiles(x, target)) || !tilesToVisit.Contains(x)).ToList();
                     
                 foreach (Tile filteredTile in filteredTiles)
                 {
                     filteredTile.Neighbour = currentTile;
-                    filteredTile.DistanceToTarget = GetDistanceBetweenTiles(filteredTile, _target);
+                    filteredTile.DistanceToTarget = GetDistanceBetweenTiles(filteredTile, target);
                     filteredTile.CostFromSource = currentTile.CostFromSource + GetDistanceBetweenTiles(currentTile, filteredTile);
                 }
                 
@@ -72,13 +65,13 @@ namespace Day12.Models
             
             IList<Tile> path = new List<Tile>();
 
-            while (currentTile != _source && currentTile != null)
+            while (currentTile != source && currentTile != null)
             {
                 path.Add(currentTile);
                 currentTile = currentTile.Neighbour;
             }
 
-            _solution = path;
+            _lastSolution = path;
             
             return path;
         }
@@ -97,7 +90,7 @@ namespace Day12.Models
                         _ => Console.BackgroundColor
                     };
 
-                    Console.ForegroundColor = _solution.Contains(Tiles[i][j]) ? ConsoleColor.Green : ConsoleColor.White;
+                    Console.ForegroundColor = _lastSolution.Contains(Tiles[i][j]) ? ConsoleColor.Green : ConsoleColor.White;
 
                     if (Tiles[i][j].Neighbour == null)
                     {
@@ -126,7 +119,6 @@ namespace Day12.Models
                         if (Tiles[i][j].CoordinatesColumn < Tiles[i][j].Neighbour.CoordinatesColumn )
                         {
                             Console.Write("◄");
-                            continue;
                         }
                     }
                 }
@@ -135,7 +127,7 @@ namespace Day12.Models
             }
         }
 
-        private int GetDistanceBetweenTiles(Tile leftOperand, Tile rightOperand)
+        private static int GetDistanceBetweenTiles(Tile leftOperand, Tile rightOperand)
         {
             return Math.Abs(leftOperand.CoordinatesRow - rightOperand.CoordinatesRow) +
                    Math.Abs(leftOperand.CoordinatesColumn - rightOperand.CoordinatesColumn);
