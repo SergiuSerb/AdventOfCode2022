@@ -14,7 +14,40 @@ namespace Day12
         {
             List<string> inputLines = ReadInputFile().ToList();
             Pathfinder pathfinder = CreatePathFinder( inputLines );
-            pathfinder.FindPath();
+            
+            DetermineShortestPathLengthFromGivenStartPoint(pathfinder);
+            DetermineShortestPathLengthOverall(pathfinder);
+        }
+
+        private static void DetermineShortestPathLengthOverall(Pathfinder pathfinder)
+        {
+            int shortestPath = int.MaxValue;
+            Tile target = pathfinder.Tiles.First( x => x.Any( x => x.TileType == TileType.Target ) )
+                .First( x => x.TileType == TileType.Target );
+
+            IList<Tile> possibleStartingTiles = pathfinder.Tiles.SelectMany(x => x.Select(x => x).Where(x => x.Height == 'a')).ToList();
+            
+            foreach (Tile tile in possibleStartingTiles)
+            {
+                var path = pathfinder.FindPath(tile, target);
+
+                shortestPath = path.Count > 1 ? Math.Min(shortestPath, path.Count) : shortestPath ;
+            }
+            
+            Console.WriteLine();
+            Console.WriteLine($"The shortest path to the destination is {shortestPath}.");
+        }
+
+        private static void DetermineShortestPathLengthFromGivenStartPoint(Pathfinder pathfinder)
+        {
+            Tile source = pathfinder.Tiles.First( x => x.Any( x => x.TileType == TileType.Source ) )
+                .First( x => x.TileType == TileType.Source );
+            Tile target = pathfinder.Tiles.First( x => x.Any( x => x.TileType == TileType.Target ) )
+                .First( x => x.TileType == TileType.Target );
+            IList<Tile> path = pathfinder.FindPath(source, target);
+            
+            Console.WriteLine();
+            Console.WriteLine($"The shortest path to the destination is {path.Count}.");
         }
 
         private static Pathfinder CreatePathFinder( List<string> inputLines )

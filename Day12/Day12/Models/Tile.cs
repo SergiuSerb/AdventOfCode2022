@@ -16,6 +16,8 @@ namespace Day12.Models
 
         public int DistanceToTarget { get; set; }
 
+        public int Fitness => CostFromSource + DistanceToTarget;
+        
         public Tile Neighbour { get; set; }
 
         public Tile( int id, char height, TileType tileType )
