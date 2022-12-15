@@ -6,20 +6,20 @@
 
         public int CoordinatesColumn { get; set; }
 
-        public  int CurrentSandId;
+        public int currentSandId;
         private bool _killYReached;
 
         public SandSpawn(int coordinatesRow, int coordinatesColumn)
         {
             CoordinatesRow = coordinatesRow;
             CoordinatesColumn = coordinatesColumn;
-            CurrentSandId = 1;
+            currentSandId = 1;
         }
 
         public void Spawn()
         {
-            Sand sand = new Sand(CurrentSandId, this);
-            CurrentSandId += 1;
+            Sand sand = new Sand(currentSandId, this);
+            currentSandId += 1;
             Map.Items.Add(sand);
             
             sand.MoveTo(CoordinatesRow, CoordinatesColumn);
@@ -27,11 +27,16 @@
 
         public void SpawnedSandIsStable()
         {
-            if (CurrentSandId <= 1000)
+            if (currentSandId <= 1000)
             {
                 if (_killYReached)
                 {
                     return;
+                }
+
+                if ( currentSandId % 100 == 0 )
+                {
+                    Map.DestructNonSignificantSand();
                 }
                 
                 Spawn();

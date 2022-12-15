@@ -21,12 +21,12 @@ namespace Day14
             RunSimulation(map, sandSpawn);
             DetermineSandCount(map, sandSpawn);
             
-            map.Print();
+            Map.Print();
         }
 
         private static void DetermineSandCount(Map map, SandSpawn sandSpawn)
         {
-            Console.WriteLine($"KillY was reached by Sand ID {sandSpawn.CurrentSandId - 1}.");
+            Console.WriteLine($"KillY was reached by Sand ID {sandSpawn.currentSandId - 2}.");
         }
 
         private static void RunSimulation(Map map, SandSpawn spawn)
@@ -93,7 +93,7 @@ namespace Day14
             }
 
             Map.KillY = Map.Items.Max(x => x.CoordinatesRow);
-            
+
             return map;
         }
 

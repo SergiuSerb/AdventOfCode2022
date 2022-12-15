@@ -1,10 +1,11 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace Day14.Models
 {
     public class Sand : IPlaceable
     {
-        private readonly SandSpawn sandSpawn;
+        private readonly SandSpawn _sandSpawn;
 
         public int Id { get; }
         
@@ -16,40 +17,63 @@ namespace Day14.Models
 
         public Sand(int id, SandSpawn sandSpawn)
         {
-            this.sandSpawn = sandSpawn;
+            _sandSpawn = sandSpawn;
             IsStable = false;
             Id = id;
         }
 
         public void MoveTo(int coordinatesRow, int coordinatesColumn)
         {
-            if (CoordinatesRow == Map.KillY)
-            {
-                sandSpawn.KillYReached();
-            }
-            
             CoordinatesRow = coordinatesRow;
             CoordinatesColumn = coordinatesColumn;
-            
-            while (Map.IsAreaBelowEmpty(CoordinatesRow, CoordinatesColumn))
+
+            while ( Map.CanMoveDown(this) )
             {
-                FallDown();
+                if ( HasSandReachedKillY() )
+                {
+                    break;
+                }
+
+                Fall();
             }
             
-            if (Map.IsAreaBelowLeftEmpty(CoordinatesRow, CoordinatesColumn))
+            IsStable = true;
+            _sandSpawn.SpawnedSandIsStable();
+        }
+
+        private void Fall()
+        {
+            while ( Map.IsAreaBelowEmpty( CoordinatesRow, CoordinatesColumn ) )
+            {
+                if ( HasSandReachedKillY() )
+                {
+                    return;
+                }
+                
+                FallDown();
+            }
+
+            if ( Map.IsAreaBelowLeftEmpty( CoordinatesRow, CoordinatesColumn ) )
             {
                 FallDownLeft();
                 return;
             }
-            
-            if (Map.IsAreaBelowRightEmpty(CoordinatesRow, CoordinatesColumn))
+
+            if ( Map.IsAreaBelowRightEmpty( CoordinatesRow, CoordinatesColumn ) )
             {
                 FallDownRight();
-                return;
+            }
+        }
+
+        private bool HasSandReachedKillY()
+        {
+            if ( Map.HasSandReachedKillY(this) )
+            {
+                _sandSpawn.KillYReached();
+                return true;
             }
 
-            IsStable = true;
-            sandSpawn.SpawnedSandIsStable();
+            return false;
         }
 
         private void FallDown()
@@ -59,12 +83,14 @@ namespace Day14.Models
         
         private void FallDownLeft()
         {
-            MoveTo(CoordinatesRow + 1, CoordinatesColumn - 1);
+            CoordinatesRow += 1;
+            CoordinatesColumn -= 1;
         }
         
         private void FallDownRight()
         {
-            MoveTo(CoordinatesRow + 1, CoordinatesColumn + 1);
+            CoordinatesRow += 1;
+            CoordinatesColumn += 1;
         }
     }
 }

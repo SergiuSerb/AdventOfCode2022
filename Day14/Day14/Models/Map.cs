@@ -25,12 +25,47 @@ namespace Day14.Models
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn - 1);
         }
         
+        public static bool IsAreaAboveLeftEmpty(int coordinatesRow, int coordinatesColumn)
+        {
+            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn - 1);
+        }
+        
+        public static bool IsAreaAboveRightEmpty(int coordinatesRow, int coordinatesColumn)
+        {
+            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn + 1);
+        }
+        
         public static bool IsAreaBelowRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn + 1);
         }
+        
+        public static bool IsAreaAboveEmpty(int coordinatesRow, int coordinatesColumn)
+        {
+            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn);
+        }        
+        
+        public static bool IsAreaRightEmpty(int coordinatesRow, int coordinatesColumn)
+        {
+            return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn + 1);
+        }        
+        
+        public static bool IsAreaLeftEmpty(int coordinatesRow, int coordinatesColumn)
+        {
+            return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn - 1);
+        }
 
-        public void Print()
+        private static bool CanBeDeleted( Sand sand )
+        {
+            return !IsAreaAboveEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
+                   !IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
+                   !IsAreaLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
+                   !IsAreaRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
+                   !IsAreaAboveLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
+                   !IsAreaAboveRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn );
+        }
+
+        public static void Print()
         {
             int boundingBoxMinRow = Items.Min(x => x.CoordinatesRow);
             int boundingBoxMaxRow = Items.Max(x => x.CoordinatesRow);
@@ -78,6 +113,31 @@ namespace Day14.Models
                 Console.WriteLine();
             }
             
+        }
+
+        public static void DestructNonSignificantSand()
+        {
+            IList<Sand> sandToDestroy = Items.OfType<Sand>().Where( CanBeDeleted ).ToList();
+            
+            foreach ( Sand sand in sandToDestroy )
+            {
+                Items.Remove( sand );
+            }
+            
+            Console.WriteLine($"Optimized away {sandToDestroy.Count} sand!");
+        }
+
+        public static bool CanMoveDown(Sand sand)
+        {
+            return (IsAreaBelowRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) ||
+                   IsAreaBelowLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) ||
+                   IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn )) &&
+                   !HasSandReachedKillY( sand );
+        }
+
+        public static bool HasSandReachedKillY( Sand sand )
+        {
+            return sand.CoordinatesRow == KillY;
         }
     }
 }
