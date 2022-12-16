@@ -29,7 +29,7 @@ namespace Day14.Models
 
             while ( Map.CanMoveDown(this) )
             {
-                if ( HasSandReachedKillY() )
+                if ( HasSandReachedSandSpawn() )
                 {
                     break;
                 }
@@ -45,7 +45,7 @@ namespace Day14.Models
         {
             while ( Map.IsAreaBelowEmpty( CoordinatesRow, CoordinatesColumn ) )
             {
-                if ( HasSandReachedKillY() )
+                if ( HasSandReachedSandSpawn() )
                 {
                     return;
                 }
@@ -64,12 +64,12 @@ namespace Day14.Models
                 FallDownRight();
             }
         }
-
-        private bool HasSandReachedKillY()
+        
+        private bool HasSandReachedSandSpawn()
         {
-            if ( Map.HasSandReachedKillY(this) )
+            if ( Map.HasSandReachedSandSpawn(this) && IsStable)
             {
-                _sandSpawn.KillYReached();
+                _sandSpawn.SandSpawnReached();
                 return true;
             }
 

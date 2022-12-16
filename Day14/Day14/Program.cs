@@ -16,7 +16,7 @@ namespace Day14
             Map map = CreateMap(inputLines);
             
             SandSpawn sandSpawn = new SandSpawn(0, 500);
-            Map.Items.Add(sandSpawn);
+            map.AddSandSpawn(sandSpawn);
             
             RunSimulation(map, sandSpawn);
             DetermineSandCount(map, sandSpawn);
@@ -91,8 +91,8 @@ namespace Day14
                     currentGroupIndex++;
                 }
             }
-
-            Map.KillY = Map.Items.Max(x => x.CoordinatesRow);
+            
+            Map.FloorY = Map.Items.Max(x => x.CoordinatesRow) - 2;
 
             return map;
         }
@@ -100,7 +100,7 @@ namespace Day14
         private static string[] ReadInputFile()
         {
             string? executingPath = Path.GetDirectoryName( Assembly.GetEntryAssembly()?.Location );
-            const string inputFileName = "input.txt";
+            const string inputFileName = "input1.txt";
             string inputPath = $"{executingPath}\\{inputFileName}";
 
             ReadLines( inputPath, out string[] strings );

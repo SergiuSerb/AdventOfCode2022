@@ -8,11 +8,19 @@ namespace Day14.Models
     {
         public static IList<IPlaceable> Items;
 
-        public static int KillY = 0;
+        public static int FloorY = 0;
+
+        public static SandSpawn SandSpawn;
 
         public Map()
         {
             Items = new List<IPlaceable>();
+        }
+
+        public void AddSandSpawn(SandSpawn sandSpawn)
+        {
+            Items.Add(sandSpawn);
+            SandSpawn = sandSpawn;
         }
 
         public static bool IsAreaBelowEmpty(int coordinatesRow, int coordinatesColumn)
@@ -129,15 +137,20 @@ namespace Day14.Models
 
         public static bool CanMoveDown(Sand sand)
         {
-            return (IsAreaBelowRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) ||
-                   IsAreaBelowLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) ||
-                   IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn )) &&
-                   !HasSandReachedKillY( sand );
+            return (IsAreaBelowRightEmpty(sand.CoordinatesRow, sand.CoordinatesColumn) ||
+                    IsAreaBelowLeftEmpty(sand.CoordinatesRow, sand.CoordinatesColumn) ||
+                    IsAreaBelowEmpty(sand.CoordinatesRow, sand.CoordinatesColumn)) &&
+                   !HasSandReachedFloorY(sand);
         }
-
-        public static bool HasSandReachedKillY( Sand sand )
+        
+        public static bool HasSandReachedFloorY( Sand sand )
         {
-            return sand.CoordinatesRow == KillY;
+            return sand.CoordinatesRow == FloorY;
+        }
+        
+        public static bool HasSandReachedSandSpawn( Sand sand )
+        {
+            return sand.CoordinatesRow == SandSpawn.CoordinatesRow && sand.CoordinatesColumn == SandSpawn.CoordinatesColumn;
         }
     }
 }

@@ -8,6 +8,7 @@
 
         public int currentSandId;
         private bool _killYReached;
+        private bool _sandSpawnReached;
 
         public SandSpawn(int coordinatesRow, int coordinatesColumn)
         {
@@ -18,6 +19,7 @@
 
         public void Spawn()
         {
+            Map.Print();
             Sand sand = new Sand(currentSandId, this);
             currentSandId += 1;
             Map.Items.Add(sand);
@@ -27,9 +29,14 @@
 
         public void SpawnedSandIsStable()
         {
-            if (currentSandId <= 1000)
+            if (currentSandId <= 21)
             {
                 if (_killYReached)
+                {
+                    return;
+                }
+                
+                if (_sandSpawnReached)
                 {
                     return;
                 }
@@ -46,6 +53,11 @@
         public void KillYReached()
         {
             _killYReached = true;
+        }
+
+        public void SandSpawnReached()
+        {
+            _sandSpawnReached = true;
         }
     }
 }
