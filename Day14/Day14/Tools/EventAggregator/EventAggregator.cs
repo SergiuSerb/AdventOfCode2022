@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
-namespace Day14.Tools
+namespace Day14.Tools.EventAggregator
 {
     public static class EventAggregator
     {
@@ -18,6 +19,22 @@ namespace Day14.Tools
             
             _subscriptions[typeof(TEventType)].Add(subscriber);
 
+        }
+
+        public static void Unsubscribe<TEventType>( object subscriberInstance ) where TEventType : IEvent
+        {
+            if ( !_subscriptions.ContainsKey( typeof(TEventType) ) )
+            {
+                return;
+            }
+
+            IEnumerable<ISubscriber> subscriptionsToRemove = _subscriptions[typeof(TEventType)]
+                .Where( x => ( x as Subscriber<TEventType> )?.SubscriberInstance == subscriberInstance );
+
+            foreach ( ISubscriber subscriber in subscriptionsToRemove )
+            {
+                _subscriptions[typeof(TEventType)].Remove( subscriber );
+            }
         }
 
         public static void Publish<TEventType>( TEventType eventToPublish ) where TEventType : IEvent

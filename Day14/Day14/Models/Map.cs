@@ -7,63 +7,61 @@ namespace Day14.Models
 {
     public class Map
     {
-        public static IList<IPlaceable> Items;
-
-        public static int FloorY = 0;
-
-        public static SandSpawn SandSpawn;
+        public static IList<IPlaceable> items;
+        public static int floorY = 0;
+        private static SandSpawn _sandSpawn;
+        
+        public static int RockCount { get; set; }
 
         public Map()
         {
-            Items = new List<IPlaceable>();
+            items = new List<IPlaceable>();
+        }
+        
+        public static void AddSandSpawn(SandSpawn sandSpawn)
+        {
+            items.Add(sandSpawn);
+            _sandSpawn = sandSpawn;
         }
 
-        public static int RockCount { get; set; }
-
-        public void AddSandSpawn(SandSpawn sandSpawn)
+        private static bool IsAreaBelowEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            Items.Add(sandSpawn);
-            SandSpawn = sandSpawn;
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn);
         }
 
-        public static bool IsAreaBelowEmpty(int coordinatesRow, int coordinatesColumn)
+        private static bool IsAreaBelowLeftEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn);
-        }
-
-        public static bool IsAreaBelowLeftEmpty(int coordinatesRow, int coordinatesColumn)
-        {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn - 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn - 1);
         }
 
         private static bool IsAreaAboveLeftEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn - 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn - 1);
         }
 
         private static bool IsAreaAboveRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn + 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn + 1);
         }
-        
-        public static bool IsAreaBelowRightEmpty(int coordinatesRow, int coordinatesColumn)
+
+        private static bool IsAreaBelowRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn + 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn + 1);
         }
 
         private static bool IsAreaAboveEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn);
         }
 
         private static bool IsAreaRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn + 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn + 1);
         }
 
         private static bool IsAreaLeftEmpty(int coordinatesRow, int coordinatesColumn)
         {
-            return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn - 1);
+            return !items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn - 1);
         }
 
         private static bool CanBeDeleted( IPlaceable sand )
@@ -89,12 +87,12 @@ namespace Day14.Models
         
         public static void Print()
         {
-            int boundingBoxMinRow = Items.Min(x => x.CoordinatesRow);
-            int boundingBoxMaxRow = Items.Max(x => x.CoordinatesRow);
+            int boundingBoxMinRow = items.Min(x => x.CoordinatesRow);
+            int boundingBoxMaxRow = items.Max(x => x.CoordinatesRow);
             int rowOffset = boundingBoxMinRow;
             
-            int boundingBoxMinColumn = Items.Min(x => x.CoordinatesColumn);
-            int boundingBoxMaxColumn = Items.Max(x => x.CoordinatesColumn);
+            int boundingBoxMinColumn = items.Min(x => x.CoordinatesColumn);
+            int boundingBoxMaxColumn = items.Max(x => x.CoordinatesColumn);
             int columnOffset = boundingBoxMinColumn;
 
             char[,] visualRepresentation = new char[boundingBoxMaxRow - rowOffset + 1, boundingBoxMaxColumn - columnOffset + 1];
@@ -107,7 +105,7 @@ namespace Day14.Models
                 }
             }
 
-            foreach (IPlaceable placeable in Items)
+            foreach (IPlaceable placeable in items)
             {
                 if (placeable is SettledSand)
                 {
@@ -137,18 +135,18 @@ namespace Day14.Models
             
         }
 
-        public static void DestructNonSignificantSand()
+        public static void DestructNonSignificantPlaceables()
         {
-            IList<IPlaceable> sandToDestroy = Items.Where(  CanBeDeleted ).ToList();
+            IList<IPlaceable> placeablesToDestroy = items.Where(  CanBeDeleted ).ToList();
 
-            int beforeOptimizationCount = Items.Count;
+            int beforeOptimizationCount = items.Count;
             
-            foreach ( IPlaceable sand in sandToDestroy )
+            foreach ( IPlaceable placeable in placeablesToDestroy )
             {
-                Items.Remove( sand );
+                items.Remove( placeable );
             }
             
-            Console.WriteLine($"Optimized away {sandToDestroy.Count} sand! Remaining total is {beforeOptimizationCount}. Would've been {SandSpawn.currentSandId} + {RockCount}.");
+            Console.WriteLine($"Optimized away {placeablesToDestroy.Count} sand! Remaining total is {beforeOptimizationCount}. Would've been {_sandSpawn.currentSandId} + {RockCount}.");
         }
 
         public static NextMove GetNextMove(Sand sand)
@@ -168,7 +166,7 @@ namespace Day14.Models
 
         private static bool HasSandReachedFloorY( Sand sand )
         {
-            return sand.CoordinatesRow == FloorY;
+            return sand.CoordinatesRow == floorY;
         }
     }
 }

@@ -1,6 +1,4 @@
-using System;
-
-namespace Day14.Tools
+namespace Day14.Tools.EventAggregator
 {
     public interface ISubscriber
     {

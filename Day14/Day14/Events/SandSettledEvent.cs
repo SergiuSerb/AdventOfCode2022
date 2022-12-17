@@ -1,5 +1,5 @@
 using Day14.Models;
-using Day14.Tools;
+using Day14.Tools.EventAggregator;
 
 namespace Day14.Events
 {

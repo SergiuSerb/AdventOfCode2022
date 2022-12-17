@@ -1,5 +1,5 @@
 ﻿using Day14.Events;
-using Day14.Tools;
+using Day14.Tools.EventAggregator;
 
 namespace Day14.Models
 {
@@ -28,7 +28,7 @@ namespace Day14.Models
         private void OnSandSettled( SandSettledEvent sandSettledEvent )
         {
             SettledSand settledSand = new SettledSand(sandSettledEvent.Sand.Id, sandSettledEvent.Sand.CoordinatesRow, sandSettledEvent.Sand.CoordinatesColumn);
-            Map.Items.Add(settledSand);
+            Map.items.Add(settledSand);
 
             if ( sandSettledEvent.Sand.CoordinatesRow == CoordinatesRow && sandSettledEvent.Sand.CoordinatesColumn == CoordinatesColumn )
             {

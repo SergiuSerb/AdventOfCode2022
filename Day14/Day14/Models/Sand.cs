@@ -1,7 +1,4 @@
-﻿using Day14.Events;
-using Day14.Tools;
-
-namespace Day14.Models
+﻿namespace Day14.Models
 {
     public class Sand : IPlaceable
     {

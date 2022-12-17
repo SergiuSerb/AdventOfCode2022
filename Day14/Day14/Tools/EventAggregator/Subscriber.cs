@@ -1,6 +1,6 @@
 using System;
 
-namespace Day14.Tools
+namespace Day14.Tools.EventAggregator
 {
     public class Subscriber<TEventType> : ISubscriber where TEventType : IEvent
     {

@@ -8,7 +8,7 @@ namespace Day14.Models
 
         public bool CanMoveDownLeft { get; }
 
-        public bool HasReachedFloorY { get; }
+        private bool HasReachedFloorY { get; }
 
         public bool CanFall => ( CanMoveDown || CanMoveDownRight || CanMoveDownLeft ) && !HasReachedFloorY;
 

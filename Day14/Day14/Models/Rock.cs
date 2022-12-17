@@ -2,7 +2,7 @@
 {
     public class Rock : IPlaceable
     {
-        public int Id { get;  }
+        public int Id { get; }
         
         public int CoordinatesRow { get; set; }
 

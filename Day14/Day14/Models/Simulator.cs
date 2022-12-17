@@ -1,17 +1,19 @@
-using System.Security.Cryptography.X509Certificates;
 using Day14.Events;
-using Day14.Tools;
+using Day14.Tools.EventAggregator;
 
 namespace Day14.Models
 {
     public class Simulator
     {
+        private readonly bool _selfManagePlaceables;
         private SandSpawn _sandSpawn;
         private bool _sandSpawnReached;
-        public int SandThatReachedSpawnId { get; set; }
+        
+        public int SandThatReachedSpawnId { get; private set; }
 
-        public Simulator( Map map )
+        public Simulator( Map map, bool selfManagePlaceables )
         {
+            _selfManagePlaceables = selfManagePlaceables;
             CreateSandSpawn( map );
             SubscribeToEvents();
 
@@ -35,9 +37,9 @@ namespace Day14.Models
             {
                 _sandSpawn.Spawn();
                 
-                if ( _sandSpawn.currentSandId % 100 == 0 )
+                if ( _selfManagePlaceables && _sandSpawn.currentSandId % 100 == 0 )
                 {
-                    Map.DestructNonSignificantSand();
+                    Map.DestructNonSignificantPlaceables();
                 }
             }
         }
@@ -45,7 +47,7 @@ namespace Day14.Models
         private void CreateSandSpawn( Map map )
         {
             _sandSpawn = new SandSpawn( 0, 500 );
-            map.AddSandSpawn( _sandSpawn );
+            Map.AddSandSpawn( _sandSpawn );
         }
     }
 }
