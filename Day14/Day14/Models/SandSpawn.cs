@@ -1,4 +1,7 @@
-﻿namespace Day14.Models
+﻿using Day14.Events;
+using Day14.Tools;
+
+namespace Day14.Models
 {
     public class SandSpawn : IPlaceable
     {
@@ -7,57 +10,39 @@
         public int CoordinatesColumn { get; set; }
 
         public int currentSandId;
-        private bool _killYReached;
-        private bool _sandSpawnReached;
 
         public SandSpawn(int coordinatesRow, int coordinatesColumn)
         {
             CoordinatesRow = coordinatesRow;
             CoordinatesColumn = coordinatesColumn;
             currentSandId = 1;
+            
+            SubscribeToEvents();
+        }
+
+        private void SubscribeToEvents()
+        {
+            EventAggregator.Subscribe<SandSettledEvent>( this, OnSandSettled );
+        }
+
+        private void OnSandSettled( SandSettledEvent sandSettledEvent )
+        {
+            SettledSand settledSand = new SettledSand(sandSettledEvent.Sand.Id, sandSettledEvent.Sand.CoordinatesRow, sandSettledEvent.Sand.CoordinatesColumn);
+            Map.Items.Add(settledSand);
+
+            if ( sandSettledEvent.Sand.CoordinatesRow == CoordinatesRow && sandSettledEvent.Sand.CoordinatesColumn == CoordinatesColumn )
+            {
+                EventAggregator.Publish(new SandSpawnReachedEvent());
+            }
         }
 
         public void Spawn()
         {
-            Map.Print();
-            Sand sand = new Sand(currentSandId, this);
-            currentSandId += 1;
-            Map.Items.Add(sand);
+            Sand sand = new Sand(currentSandId++);
             
             sand.MoveTo(CoordinatesRow, CoordinatesColumn);
-        }
 
-        public void SpawnedSandIsStable()
-        {
-            if (currentSandId <= 21)
-            {
-                if (_killYReached)
-                {
-                    return;
-                }
-                
-                if (_sandSpawnReached)
-                {
-                    return;
-                }
-
-                if ( currentSandId % 100 == 0 )
-                {
-                    Map.DestructNonSignificantSand();
-                }
-                
-                Spawn();
-            }
-        }
-
-        public void KillYReached()
-        {
-            _killYReached = true;
-        }
-
-        public void SandSpawnReached()
-        {
-            _sandSpawnReached = true;
+            EventAggregator.Publish(new SandSettledEvent(sand));
         }
     }
 }

@@ -1,24 +1,18 @@
-﻿using System;
-using System.Data;
+﻿using Day14.Events;
+using Day14.Tools;
 
 namespace Day14.Models
 {
     public class Sand : IPlaceable
     {
-        private readonly SandSpawn _sandSpawn;
-
         public int Id { get; }
         
         public int CoordinatesRow { get; set; }
 
         public int CoordinatesColumn { get; set; }
 
-        public bool IsStable { get; set; }
-
-        public Sand(int id, SandSpawn sandSpawn)
+        public Sand(int id)
         {
-            _sandSpawn = sandSpawn;
-            IsStable = false;
             Id = id;
         }
 
@@ -26,56 +20,36 @@ namespace Day14.Models
         {
             CoordinatesRow = coordinatesRow;
             CoordinatesColumn = coordinatesColumn;
-
-            while ( Map.CanMoveDown(this) )
-            {
-                if ( HasSandReachedSandSpawn() )
-                {
-                    break;
-                }
-
-                Fall();
-            }
             
-            IsStable = true;
-            _sandSpawn.SpawnedSandIsStable();
+            NextMove nextMove = Map.GetNextMove( this );
+
+            while ( nextMove.CanFall )
+            {
+                Fall( nextMove );
+                nextMove = Map.GetNextMove( this );
+            }
         }
 
-        private void Fall()
+        private void Fall( NextMove nextMove )
         {
-            while ( Map.IsAreaBelowEmpty( CoordinatesRow, CoordinatesColumn ) )
+            if ( nextMove.CanMoveDown  )
             {
-                if ( HasSandReachedSandSpawn() )
-                {
-                    return;
-                }
-                
                 FallDown();
+                return;
             }
 
-            if ( Map.IsAreaBelowLeftEmpty( CoordinatesRow, CoordinatesColumn ) )
+            if ( nextMove.CanMoveDownLeft )
             {
                 FallDownLeft();
                 return;
             }
 
-            if ( Map.IsAreaBelowRightEmpty( CoordinatesRow, CoordinatesColumn ) )
+            if ( nextMove.CanMoveDownRight )
             {
                 FallDownRight();
             }
         }
         
-        private bool HasSandReachedSandSpawn()
-        {
-            if ( Map.HasSandReachedSandSpawn(this) && IsStable)
-            {
-                _sandSpawn.SandSpawnReached();
-                return true;
-            }
-
-            return false;
-        }
-
         private void FallDown()
         {
             CoordinatesRow += 1;

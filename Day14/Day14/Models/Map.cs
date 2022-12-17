@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Day14.Models
 {
@@ -17,6 +18,8 @@ namespace Day14.Models
             Items = new List<IPlaceable>();
         }
 
+        public static int RockCount { get; set; }
+
         public void AddSandSpawn(SandSpawn sandSpawn)
         {
             Items.Add(sandSpawn);
@@ -32,13 +35,13 @@ namespace Day14.Models
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn - 1);
         }
-        
-        public static bool IsAreaAboveLeftEmpty(int coordinatesRow, int coordinatesColumn)
+
+        private static bool IsAreaAboveLeftEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn - 1);
         }
-        
-        public static bool IsAreaAboveRightEmpty(int coordinatesRow, int coordinatesColumn)
+
+        private static bool IsAreaAboveRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn + 1);
         }
@@ -47,32 +50,43 @@ namespace Day14.Models
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow + 1 && x.CoordinatesColumn == coordinatesColumn + 1);
         }
-        
-        public static bool IsAreaAboveEmpty(int coordinatesRow, int coordinatesColumn)
+
+        private static bool IsAreaAboveEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow - 1 && x.CoordinatesColumn == coordinatesColumn);
-        }        
-        
-        public static bool IsAreaRightEmpty(int coordinatesRow, int coordinatesColumn)
+        }
+
+        private static bool IsAreaRightEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn + 1);
-        }        
-        
-        public static bool IsAreaLeftEmpty(int coordinatesRow, int coordinatesColumn)
+        }
+
+        private static bool IsAreaLeftEmpty(int coordinatesRow, int coordinatesColumn)
         {
             return !Items.Any(x => x.CoordinatesRow == coordinatesRow && x.CoordinatesColumn == coordinatesColumn - 1);
         }
 
-        private static bool CanBeDeleted( Sand sand )
+        private static bool CanBeDeleted( IPlaceable sand )
         {
-            return !IsAreaAboveEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
-                   !IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
-                   !IsAreaLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
-                   !IsAreaRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
-                   !IsAreaAboveLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ) &&
-                   !IsAreaAboveRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn );
-        }
+            bool isAreaBelowEmpty = false;
+            bool isAreaAboveEmpty = false;
+            bool isAreaLeftEmpty = false;
+            bool isAreaRightEmpty = false;
+            bool isAreaAboveRightEmpty = false;
+            bool isAreaAboveLeftEmpty = false;
 
+            Parallel.Invoke( () => isAreaBelowEmpty = IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaAboveEmpty = IsAreaAboveEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaLeftEmpty = IsAreaLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaRightEmpty = IsAreaRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaAboveRightEmpty = IsAreaAboveRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaAboveLeftEmpty = IsAreaAboveLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn )
+                           );
+            
+            return !isAreaAboveEmpty && !isAreaBelowEmpty && !isAreaLeftEmpty &&
+                    !isAreaRightEmpty && !isAreaAboveRightEmpty && !isAreaAboveLeftEmpty;
+        }        
+        
         public static void Print()
         {
             int boundingBoxMinRow = Items.Min(x => x.CoordinatesRow);
@@ -95,9 +109,9 @@ namespace Day14.Models
 
             foreach (IPlaceable placeable in Items)
             {
-                if (placeable is Sand)
+                if (placeable is SettledSand)
                 {
-                    visualRepresentation[placeable.CoordinatesRow - rowOffset, placeable.CoordinatesColumn - columnOffset] = 'o';
+                    visualRepresentation[placeable.CoordinatesRow - rowOffset, placeable.CoordinatesColumn - columnOffset] = 'O';
                 }
 
                 if (placeable is Rock)
@@ -125,32 +139,36 @@ namespace Day14.Models
 
         public static void DestructNonSignificantSand()
         {
-            IList<Sand> sandToDestroy = Items.OfType<Sand>().Where( CanBeDeleted ).ToList();
+            IList<IPlaceable> sandToDestroy = Items.Where(  CanBeDeleted ).ToList();
+
+            int beforeOptimizationCount = Items.Count;
             
-            foreach ( Sand sand in sandToDestroy )
+            foreach ( IPlaceable sand in sandToDestroy )
             {
                 Items.Remove( sand );
             }
             
-            Console.WriteLine($"Optimized away {sandToDestroy.Count} sand!");
+            Console.WriteLine($"Optimized away {sandToDestroy.Count} sand! Remaining total is {beforeOptimizationCount}. Would've been {SandSpawn.currentSandId} + {RockCount}.");
         }
 
-        public static bool CanMoveDown(Sand sand)
+        public static NextMove GetNextMove(Sand sand)
         {
-            return (IsAreaBelowRightEmpty(sand.CoordinatesRow, sand.CoordinatesColumn) ||
-                    IsAreaBelowLeftEmpty(sand.CoordinatesRow, sand.CoordinatesColumn) ||
-                    IsAreaBelowEmpty(sand.CoordinatesRow, sand.CoordinatesColumn)) &&
-                   !HasSandReachedFloorY(sand);
+            bool isAreaBelowEmpty = false;
+            bool isAreaBelowLeftEmpty = false;
+            bool isAreaBelowRightEmpty = false;
+            bool hasSandReachedFloor = false;
+
+            Parallel.Invoke( () => isAreaBelowEmpty = IsAreaBelowEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaBelowLeftEmpty = IsAreaBelowLeftEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => isAreaBelowRightEmpty = IsAreaBelowRightEmpty( sand.CoordinatesRow, sand.CoordinatesColumn ),
+                            () => hasSandReachedFloor = HasSandReachedFloorY(sand));
+
+            return new NextMove( isAreaBelowEmpty, isAreaBelowRightEmpty, isAreaBelowLeftEmpty, hasSandReachedFloor );
         }
-        
-        public static bool HasSandReachedFloorY( Sand sand )
+
+        private static bool HasSandReachedFloorY( Sand sand )
         {
             return sand.CoordinatesRow == FloorY;
-        }
-        
-        public static bool HasSandReachedSandSpawn( Sand sand )
-        {
-            return sand.CoordinatesRow == SandSpawn.CoordinatesRow && sand.CoordinatesColumn == SandSpawn.CoordinatesColumn;
         }
     }
 }
