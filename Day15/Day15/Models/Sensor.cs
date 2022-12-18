@@ -1,5 +1,3 @@
-using System;
-using Day15.Tools;
 using Day15.Tools.Math;
 
 namespace Day15.Models

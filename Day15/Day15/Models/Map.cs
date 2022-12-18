@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Day15.Tools;
 using Day15.Tools.Math;
-using Range = System.Range;
 
 namespace Day15.Models
 {

@@ -1,6 +1,3 @@
-using System;
-using Day15.Tools;
-
 namespace Day15.Models
 {
     public class Beacon : IPlaceable

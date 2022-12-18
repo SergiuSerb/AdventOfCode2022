@@ -6,7 +6,7 @@ namespace Day15.Tools.Math
 {
     public class GroupRange
     {
-        private IList<CustomRange> _intervals;
+        private readonly IList<CustomRange> _intervals;
 
         public bool IsUnitary => _intervals.Count == 1;
 
