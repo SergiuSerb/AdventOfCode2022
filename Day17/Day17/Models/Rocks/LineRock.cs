@@ -3,7 +3,7 @@ using Day17.Tools.Math;
 
 namespace Day17.Models.Rocks
 {
-    public class LineRock : IPlaceable
+    public class LineRock : Rock, IPlaceable
     {
         //#
         //#
@@ -11,9 +11,13 @@ namespace Day17.Models.Rocks
         //#
         public int Id { get; }
         
-        public int CoordinateRow { get; }
+        public int CoordinateRow { get; set;}
 
-        public int CoordinateColumn { get; }
+        public int CoordinateColumn { get; set;}
+        
+        public int RowOffset => 0;
+        
+        public int ColumnOffset => 0;
 
         private IList<RockComponent> _components = new List<RockComponent>()
         {

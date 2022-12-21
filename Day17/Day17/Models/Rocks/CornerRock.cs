@@ -6,13 +6,13 @@ namespace Day17.Models.Rocks
     //..#
     //..#
     //###
-    public class CornerRock : IPlaceable
+    public class CornerRock : Rock, IPlaceable
     {
         public int Id { get; }
 
-        public int CoordinateRow { get; }
+        public int CoordinateRow { get; set;}
 
-        public int CoordinateColumn { get; }
+        public int CoordinateColumn { get; set;}
 
         private IList<RockComponent> _components = new List<RockComponent>()
         {

@@ -29,5 +29,11 @@ namespace Day17.Tools.Math
         {
             return Minimum <= range.Minimum && range.Maximum <= Maximum;
         }
+        
+        public bool Intersects( CustomRange range)
+        {
+            return Minimum <= range.Minimum && range.Minimum <= Maximum ||
+                   Minimum <= range.Maximum && range.Maximum <= Maximum;
+        }
     }
 }
