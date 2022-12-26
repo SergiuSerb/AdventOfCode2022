@@ -7,10 +7,11 @@ namespace Day17.Models.Rocks
     //.#.
     public class PlusRock : Rock
     {
-        public PlusRock(int id)
+        public PlusRock(ulong id)
         {
             Id = id;
-            components = new List<RockComponent>()
+            CoordinateColumn = 4;
+            Components = new List<RockComponent>()
             {
                 new RockComponent(0, 0),
                 new RockComponent(1, 0),

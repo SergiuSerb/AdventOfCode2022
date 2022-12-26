@@ -2,11 +2,11 @@ namespace Day17.Tools.Math
 {
     public class CustomRange
     {
-        public int Minimum { get; }
+        public long Minimum { get; }
 
-        public int Maximum { get; }
+        public long Maximum { get; }
 
-        public CustomRange( int minimum, int maximum )
+        public CustomRange( long minimum, long maximum )
         {
             if ( minimum > maximum )
             {
@@ -20,7 +20,7 @@ namespace Day17.Tools.Math
             }
         }
 
-        public bool Includes( int x )
+        public bool Includes( long x )
         {
             return Minimum <= x && x <= Maximum;
         }

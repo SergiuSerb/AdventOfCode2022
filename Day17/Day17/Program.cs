@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Day17.Models;
 using Day17.Models.Moves;
 using Day17.Tools.FileReader;
 
@@ -12,6 +14,16 @@ namespace Day17
         {
             string[] inputLines = FileReader.ReadInputFile( _inputFileName );
             List<IMove> moves = CreateMoves( inputLines );
+            MoveContainer moveContainer = new MoveContainer(moves);
+            Simulator simulator = new Simulator();
+            
+            simulator.Run(moveContainer);
+            DetermineTopHeight(simulator);
+        }
+
+        private static void DetermineTopHeight(Simulator simulator)
+        {
+            Console.WriteLine($"After 2022 rounds, the top height is {simulator.GetTopHeight()}.");
         }
 
         private static List<IMove> CreateMoves( string[] inputLines )

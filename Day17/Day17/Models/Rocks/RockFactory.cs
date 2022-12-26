@@ -12,7 +12,7 @@ namespace Day17.Models.Rocks
 
         private static int _currentRockType = -1;
         
-        public static Rock Create(int rockId)
+        public static Rock Create(ulong rockId)
         {
             _currentRockType++;
             return (Rock)Activator.CreateInstance( _rockTypes[_currentRockType % _rockTypes.Count ], rockId );
