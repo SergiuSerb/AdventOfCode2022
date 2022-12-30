@@ -14,10 +14,17 @@ namespace Day17.Models.Moves
             _currentMoveIndex = -1;
         }
 
+        public int MoveCount => _moves.Count;
+
         public IMove GetNextMove()
         {
             _currentMoveIndex++;
             return _moves[_currentMoveIndex % _moves.Count];
+        }
+
+        public void Reset()
+        {
+            _currentMoveIndex = -1;
         }
     }
 }

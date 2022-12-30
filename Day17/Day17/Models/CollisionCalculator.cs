@@ -34,20 +34,5 @@ namespace Day17.Models
 
             return false;
         }
-
-        // private static bool PerformComplexCollisionCheck( IPlaceable actor, List<BoundingBox> map )
-        // {
-        //     Rock rock = actor as Rock;
-        // }
-        //
-        // private static List<BoundingBox> PerformSimpleCollisionCheck( IPlaceable actor, List<IIdentifiablePlaceable> placeables )
-        // {
-        //     Rock rock = actor as Rock;
-        //
-        //     BoundingBox actorBoundingBox = rock?.GetBoundingBoxInWorldCoords();
-        //
-        //     return placeables.Select( x => (x as Rock).GetBoundingBoxInWorldCoords() )
-        //                      .Where( x => x.Intersects( actorBoundingBox ) ).ToList();
-        // }
     }
 }

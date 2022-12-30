@@ -25,7 +25,7 @@ namespace Day17.Tools.Math
             return _intervals.Any( x => x.Includes( number ) );
         }
 
-        public long GetNotIncludedValue()
+        public int GetNotIncludedValue()
         {
             if ( IsUnitary )
             {

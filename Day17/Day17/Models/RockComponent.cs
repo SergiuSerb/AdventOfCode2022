@@ -4,11 +4,11 @@ namespace Day17.Models
 {
     public class RockComponent : IPlaceable
     {
-        public long CoordinateRow { get; set;}
+        public int CoordinateRow { get; set;}
 
-        public long CoordinateColumn { get; set;}
+        public int CoordinateColumn { get; set;}
 
-        public RockComponent(long coordinateRow, long coordinateColumn)
+        public RockComponent(int coordinateRow, int coordinateColumn)
         {
             CoordinateRow = coordinateRow;
             CoordinateColumn = coordinateColumn;

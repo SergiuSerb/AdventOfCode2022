@@ -8,11 +8,11 @@ namespace Day17.Models.Rocks
     {
         private IList<RockComponent> _components;
 
-        public long CoordinateRow { get; set; }
+        public int CoordinateRow { get; set; }
 
-        public long CoordinateColumn { get; set; }
+        public int CoordinateColumn { get; set; }
         
-        public long RowSpan { get; set; }
+        public int RowSpan { get; set; }
 
         protected IList<RockComponent> Components
         {
@@ -37,10 +37,10 @@ namespace Day17.Models.Rocks
 
         public BoundingBox GetBoundingBoxInWorldCoords()
         {
-            long boundingBoxRowMax = Components.Max( x => x.CoordinateRow + CoordinateRow );
-            long boundingBoxRowMin = Components.Min( x => x.CoordinateRow + CoordinateRow );
-            long boundingBoxColumnMax = Components.Max( x => x.CoordinateColumn + CoordinateColumn );
-            long boundingBoxColumnMin = Components.Min( x => x.CoordinateColumn + CoordinateColumn );
+            int boundingBoxRowMax = Components.Max( x => x.CoordinateRow + CoordinateRow );
+            int boundingBoxRowMin = Components.Min( x => x.CoordinateRow + CoordinateRow );
+            int boundingBoxColumnMax = Components.Max( x => x.CoordinateColumn + CoordinateColumn );
+            int boundingBoxColumnMin = Components.Min( x => x.CoordinateColumn + CoordinateColumn );
 
             return new BoundingBox( new CustomRange( boundingBoxRowMin, boundingBoxRowMax ),
                                    new CustomRange( boundingBoxColumnMin, boundingBoxColumnMax ) );

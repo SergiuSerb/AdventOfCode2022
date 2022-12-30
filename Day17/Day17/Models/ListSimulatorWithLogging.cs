@@ -7,19 +7,26 @@ using Day17.Tools.Math;
 
 namespace Day17.Models
 {
-    public class Simulator : ISimulator
+    public class ListSimulatorWithLogging : ISimulator
     {
+        private Dictionary<int, List<RockComponent>> _lastRun;
+        public List<LogEntry> LogEntries;
+
         public ulong Run(MoveContainer moveContainer, ulong rocksToSpawn)
         {
             Dictionary<int, List<RockComponent>> settledComponents = new Dictionary<int, List<RockComponent>>();
+            LogEntries = new List<LogEntry>();
+            
             List<RockComponent> componentsToCheck = new List<RockComponent>();
             RockFactory rockFactory = new RockFactory();
 
-            for ( uint rockIndex = 1; rockIndex <= rocksToSpawn; rockIndex++ )
+            for ( ulong rockIndex = 1; rockIndex <= rocksToSpawn; rockIndex++ )
             {
                 Rock rock = rockFactory.Create(rockIndex);
 
                 SetStartingPosition(rock, settledComponents);
+
+                LogEntry newEntry = new LogEntry(rockIndex, rockFactory.GetLastSpawnedRockType());
 
                 while ( true )
                 {
@@ -28,21 +35,12 @@ namespace Day17.Models
                     IMove move = moveContainer.GetNextMove();
                     move.Perform(rock);
 
-                    int rockDictionaryKey = rock.CoordinateRow / 10;
-
-                    if (settledComponents.ContainsKey(rockDictionaryKey))
+                    for (int rowIndex = rock.CoordinateRow - 2; rowIndex < rock.CoordinateRow + 2; rowIndex++)
                     {
-                        componentsToCheck.AddRange(settledComponents[rockDictionaryKey]);
-                    }                   
-                    
-                    if (settledComponents.ContainsKey(rockDictionaryKey - 1 ) )
-                    {
-                        componentsToCheck.AddRange(settledComponents[rockDictionaryKey - 1]);
-                    }
-                    
-                    if (settledComponents.ContainsKey(rockDictionaryKey + 1 ) )
-                    {
-                        componentsToCheck.AddRange(settledComponents[rockDictionaryKey + 1]);
+                        if (settledComponents.ContainsKey(rowIndex))
+                        {
+                            componentsToCheck.AddRange(settledComponents[rowIndex]);
+                        }     
                     }
 
                     if (CollisionCalculator.DoesCollide(rock, componentsToCheck))
@@ -54,42 +52,44 @@ namespace Day17.Models
                             break;
                         }
                     }
+                    
+                    if (move is Down)
+                    {
+                        newEntry.DecrementDeltaRow();
+                    }
+                    
                 }
                 
                 foreach (RockComponent rockComponent in rock.GetRockComponentsInWorldCoordinates())
                 {
-                    int rockDictionaryKey = rockComponent.CoordinateRow / 10;
-                    if (settledComponents.ContainsKey(rockDictionaryKey))
+                    if (settledComponents.ContainsKey(rockComponent.CoordinateRow))
                     {
-                        settledComponents[rockDictionaryKey].Add(rockComponent);
+                        settledComponents[rockComponent.CoordinateRow].Add(rockComponent);
                     }
                     else
                     {
-                        settledComponents.Add(rockDictionaryKey, new List<RockComponent>() { rockComponent});
+                        settledComponents.Add(rockComponent.CoordinateRow, new List<RockComponent>() { rockComponent});
                     }
                 }
+                
+                LogEntries.Add(newEntry);
             }
-            
-            //return rock.GetRockComponentsInWorldCoordinates().Max(x => x.CoordinateRow);
-            return (ulong) settledComponents.SelectMany(x => x.Value).Max(x => x.CoordinateRow);
+
+            _lastRun = settledComponents;
+            return (ulong) settledComponents.Max(x => x.Key);
         }
 
         private static void SetStartingPosition(IPlaceable rock, IReadOnlyDictionary<int, List<RockComponent>> settledComponents)
         {
             if (!settledComponents.Any())
             {
-                rock.CoordinateRow = 3; // + rock.RowSpan;
+                rock.CoordinateRow = 3;
             }
             else
             {
-                rock.CoordinateRow = settledComponents[settledComponents.Max(x => x.Key)].Max(x => x.CoordinateRow) + 4;// + rock.RowSpan;
+                rock.CoordinateRow = settledComponents[settledComponents.Max(x => x.Key)].Max(x => x.CoordinateRow) + 4;
             }
         }
-
-        // public int GetTopHeight()
-        // {
-        //     return settledComponents[settledComponents.Max(x => x.Key)].Max(x => x.CoordinateRow);
-        // }
 
         private void Print(Rock rock, Dictionary<int, List<RockComponent>> settledComponents)
         {
@@ -139,6 +139,10 @@ namespace Day17.Models
                 Console.WriteLine();
             }
         }
-        
+
+        public Dictionary<int, List<RockComponent>> GetLastRun()
+        {
+            return _lastRun;
+        }
     }
 }
