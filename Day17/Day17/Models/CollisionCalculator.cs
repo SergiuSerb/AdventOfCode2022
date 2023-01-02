@@ -8,7 +8,7 @@ namespace Day17.Models
     public static class CollisionCalculator
     {
         private static readonly CustomRange wallRange = new CustomRange(1, 7);
-        private static readonly CustomRange floorRange = new CustomRange(-1, -1000);
+        private static readonly CustomRange floorRange = new CustomRange(0, -1000);
         
         public static bool DoesCollide( IPlaceable actor, List<RockComponent> mapChunk )
         {

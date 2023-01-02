@@ -32,7 +32,7 @@ namespace Day17.Models
                 if (occurrencesFromEnd > 1)
                 {
                     int occurenceCount = temporaryFullSequenceRepresentation.Count(x => x == 'X');
-                        
+                    
                     Pattern pattern = new Pattern(sequenceRepresentation, occurenceCount, occurrencesFromEnd, startingRockIndex, sequenceLength);
                     patterns.Add(pattern);
                 }

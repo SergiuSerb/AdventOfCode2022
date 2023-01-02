@@ -19,28 +19,54 @@ namespace Day17.Models
 
         public ulong Run(MoveContainer moveContainer, ulong rockNumber)
         {
-            ulong rocksToSpawn = (ulong) (moveContainer.MoveCount * RockFactory.RockTypesCount) / 3;
+            ulong rocksToSpawn = (ulong) (moveContainer.MoveCount * RockFactory.RockTypesCount);
             SimulateRocks(moveContainer, rocksToSpawn);
 
             Pattern bestPattern = SearchForPattern();
             ulong startingIndex = rocksToSpawn - (ulong) (bestPattern.SequenceLength * bestPattern.OccurrenceFromEnd);
+
+            if (rockNumber <= startingIndex + (ulong) bestPattern.SequenceLength)
+            {
+                return SimulateRocks(moveContainer, rockNumber);
+            }
+            
             Console.WriteLine($"Pattern of length {bestPattern.SequenceLength} starting after rockID {startingIndex} occuring {bestPattern.OccurenceCount} times, {bestPattern.OccurrenceFromEnd} from the end has been selected.");
 
-            
-            ulong heightToStartingRock = SimulateRocks(moveContainer, startingIndex);
-            ulong heightWithPattern = SimulateRocks(moveContainer, startingIndex + (ulong) bestPattern.SequenceLength);
-            ulong patternHeight = heightWithPattern - heightToStartingRock;
+            ulong heightToStartingRockAndOnePattern = SimulateRocks(moveContainer, startingIndex + (ulong) bestPattern.SequenceLength);
+            ulong heightWithTwoPatterns = SimulateRocks(moveContainer, startingIndex + ((ulong) bestPattern.SequenceLength * 2));
+            ulong patternHeight = heightWithTwoPatterns - heightToStartingRockAndOnePattern;
 
-            ulong patternRepetitions = (rockNumber - startingIndex) / (ulong) bestPattern.SequenceLength;
+            ulong patternRepetitions = (rockNumber - startingIndex) / (ulong) bestPattern.SequenceLength - 1;
+
+            if (patternRepetitions ==  ulong.MaxValue)
+            {
+                patternRepetitions = 0;
+            }
+            
             ulong remainingRocks = (rockNumber - startingIndex) % (ulong) bestPattern.SequenceLength;
 
             ulong heightWithPatternAndRemainingRocks = SimulateRocks(moveContainer,
-                startingIndex + (ulong) bestPattern.SequenceLength + remainingRocks);
-            ulong heightOfRemainingRocks = heightWithPatternAndRemainingRocks - heightWithPattern;
+                startingIndex + (ulong) bestPattern.SequenceLength * 2 + remainingRocks);
+            ulong heightOfRemainingRocks = heightWithPatternAndRemainingRocks - heightWithTwoPatterns;
             
             ulong predictedHeight = patternRepetitions * patternHeight;
 
-            return predictedHeight + heightToStartingRock + heightOfRemainingRocks;
+            return heightToStartingRockAndOnePattern + predictedHeight + heightOfRemainingRocks;
+            
+            // ulong heightToStartingRock = SimulateRocks(moveContainer, startingIndex);
+            // ulong heightWithPattern = SimulateRocks(moveContainer, startingIndex + (ulong) bestPattern.SequenceLength);
+            // ulong patternHeight = heightWithPattern - heightToStartingRock;
+            //
+            // ulong patternRepetitions = (rockNumber - startingIndex) / (ulong) bestPattern.SequenceLength;
+            // ulong remainingRocks = (rockNumber - startingIndex) % (ulong) bestPattern.SequenceLength;
+            //
+            // ulong heightWithPatternAndRemainingRocks = SimulateRocks(moveContainer,
+            //     startingIndex + (ulong) bestPattern.SequenceLength + remainingRocks);
+            // ulong heightOfRemainingRocks = heightWithPatternAndRemainingRocks - heightWithPattern;
+            //
+            // ulong predictedHeight = patternRepetitions * patternHeight;
+            //
+            // return predictedHeight + heightToStartingRock + heightOfRemainingRocks;
         }
 
         private Pattern SearchForPattern()
